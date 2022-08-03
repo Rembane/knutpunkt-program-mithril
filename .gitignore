@@ -2,3 +2,4 @@ node_modules/*
 .rpt2_cache/*
 .cache/*
 dist/*
+program.compiled.js
