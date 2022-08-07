@@ -28,6 +28,7 @@ try {
 
 var Program = {};
 var EventTypes = [];
+var Days = [];
 
 var orderProgram = function () {
   var cmpHelper = function (propFun) {
@@ -140,8 +141,8 @@ var Main = {
           m(
             "ul.button-list",
             [
-              { label: "Lista", prop: false },
-              { label: "Beskrivningar", prop: true },
+              { label: "List", prop: false },
+              { label: "Descriptions", prop: true },
             ].map(function (x) {
               return m("li", [
                 m(
@@ -159,8 +160,8 @@ var Main = {
             ? m(
                 "ul.button-list",
                 [
-                  { label: "Allt", prop: false },
-                  { label: "Bara pepp", prop: true },
+                  { label: "Everything", prop: false },
+                  { label: "Your hype", prop: true },
                 ].map(function (x) {
                   return m("li", [
                     m(
@@ -179,8 +180,8 @@ var Main = {
           m(
             "ul.button-list",
             [
-              { label: "Bokstavsordning", prop: "lexical" },
-              { label: "Tidsordning", prop: "time" },
+              { label: "Lexically", prop: "lexical" },
+              { label: "By time", prop: "time" },
             ].map(function (x) {
               return m("li", [
                 m(
@@ -226,36 +227,31 @@ var Main = {
 
         m(
           "ul.button-list",
-          [
-            { label: "Alla dagar", idx: -1 },
-            { label: "Fredag", idx: 5 },
-            { label: "Lördag", idx: 6 },
-            { label: "Söndag", idx: 0 },
-          ].map(function (day) {
-            return m("li", [
-              m(
-                "button",
-                {
-                  onclick: dayFun(day.idx),
-                  class: state.filterByDay == day.idx ? "active glow" : null,
-                },
-                day.label
-              ),
-            ]);
-          })
+          [{ label: "All days", idx: -1 }]
+            .concat(
+              Days.map(function (day) {
+                return {
+                  label: day.toLocaleDateString("en-US", { weekday: "long" }),
+                  idx: day.getDay(),
+                };
+              })
+            )
+            .map(function (day) {
+              return m("li", [
+                m(
+                  "button",
+                  {
+                    onclick: dayFun(day.idx),
+                    class: state.filterByDay == day.idx ? "active glow" : null,
+                  },
+                  day.label
+                ),
+              ]);
+            })
         ),
       ].concat(renderTheProgram())
     );
     function renderProgramItems(eventType) {
-      var dayNames = [
-        "söndag",
-        "måndag",
-        "tisdag",
-        "onsdag",
-        "torsdag",
-        "fredag",
-        "lördag",
-      ];
       function zeroPadInt(n) {
         return ("0" + n).slice(-2);
       }
@@ -288,7 +284,6 @@ var Main = {
                       m("p.arr", pi.organizers),
                       m("p.besk", pi.description),
                       m("p.vad", [m("span.hjarta", "♥"), pi.whatsinitforme]),
-                      m("p.taggar", pi.tags.join(", ")),
                     ]
                   : []
               )
@@ -299,7 +294,9 @@ var Main = {
                         "ul",
                         pi.schevents.map(function (s) {
                           return m("li", [
-                            dayNames[s.start.getDay()].substring(0, 3) +
+                            s.start.toLocaleDateString("en-US", {
+                              weekday: "short",
+                            }) +
                               " " +
                               formatTime(s.start) +
                               " – " +
@@ -320,7 +317,7 @@ var Main = {
                         m(
                           "button.pure-button",
                           { onclick: peppMe(pi) },
-                          pi.pepp ? "Opeppa!" : "Peppa!"
+                          pi.pepp ? "Unhype!" : "Hype!"
                         )
                       ),
                     ]
@@ -358,10 +355,10 @@ m.request({
 }).then((r) => {
   // Group by event type.
   Program = r.reduce(function (p, v) {
-    if (!p[v.type]) {
-      p[v.type] = [];
+    if (!p[v.type_id]) {
+      p[v.type_id] = [];
     }
-    p[v.type].push(v);
+    p[v.type_id].push(v);
     return p;
   }, {});
   orderProgram();
@@ -371,4 +368,17 @@ m.request({
   url: document.config.eventTypeApiUrl,
 }).then((r) => {
   EventTypes = r;
+});
+m.request({
+  method: "GET",
+  url: document.config.conventionApiUrl,
+}).then((r) => {
+  const endDate = new Date(r[0].end_date);
+  for (
+    const d = new Date(r[0].start_date);
+    d.getDate() <= endDate.getDate();
+    d.setDate(d.getDate() + 1)
+  ) {
+    Days.push(new Date(d));
+  }
 });
