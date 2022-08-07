@@ -1,11 +1,11 @@
 # README
 
-This is the Prolog Program viewer.
+This is the Knutpunkt Program viewer.
 
 ## Parts
 
-- It is built in Javascript using [Mithril 2.0](https://mithril.js.org/).
-- [Parcel](https://parceljs.org/) is used to bundle everything.
+- It is built in Javascript using [Mithril 2.2](https://mithril.js.org/).
+- [esbuild](https://esbuild.github.io/) is used to bundle everything.
 
 ## How to develop
 

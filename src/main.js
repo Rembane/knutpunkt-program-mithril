@@ -20,7 +20,7 @@ let defaultState = {
 
 let state = defaultState;
 try {
-  let s = JSON.parse(window.localStorage.getItem("prolog-program"));
+  let s = JSON.parse(window.localStorage.getItem("knutpunkt-program"));
   if (s != null) {
     state = s;
   }
@@ -67,7 +67,7 @@ var orderProgram = function () {
 var Main = {
   view: function () {
     function save() {
-      window.localStorage.setItem("prolog-program", JSON.stringify(state));
+      window.localStorage.setItem("knutpunkt-program", JSON.stringify(state));
     }
     function verboseFun(isVerbose) {
       return function (e) {

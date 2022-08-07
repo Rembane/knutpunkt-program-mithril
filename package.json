@@ -1,7 +1,7 @@
 {
-  "name": "prolog-program-mithril",
+  "name": "knutpunkt-program-mithril",
   "version": "0.2.0",
-  "description": "Program viewer for Prolog.",
+  "description": "Program viewer for Knutpunkt.",
   "main": "program.compiled.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
