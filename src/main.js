@@ -29,6 +29,7 @@ try {
 var Program = {};
 var EventTypes = [];
 var Days = [];
+var Locations = {};
 
 var orderProgram = function () {
   var cmpHelper = function (propFun) {
@@ -206,7 +207,7 @@ var Main = {
                   onclick: typeFun(0),
                   class: state.showType == 0 ? "active glow" : null,
                 },
-                "Alla"
+                "All"
               ),
             ]),
           ].concat(
@@ -302,7 +303,7 @@ var Main = {
                               " – " +
                               formatTime(s.stop) +
                               " " +
-                              s.location,
+                              Locations[s.location_id].name || "",
                           ]);
                         })
                       ),
@@ -343,7 +344,7 @@ m.request({
         return {
           start: new Date(s.start),
           stop: new Date(s.stop),
-          location: s.location,
+          location_id: s.location_id,
         };
       });
       p.schevents.sort(function (a, b) {
@@ -381,4 +382,12 @@ m.request({
   ) {
     Days.push(new Date(d));
   }
+});
+m.request({
+  method: "GET",
+  url: document.config.locationApiUrl,
+}).then((response) => {
+  response.forEach((r) => {
+    Locations[r.pk] = r;
+  });
 });
