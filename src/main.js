@@ -217,6 +217,12 @@ var Main = {
                   "button." + et.slug,
                   {
                     onclick: typeFun(et.pk),
+                    style: {
+                      backgroundColor:
+                        state.showType == et.pk
+                          ? "#" + et.active_color
+                          : "#" + et.color,
+                    },
                     class: state.showType == et.pk ? "active glow" : null,
                   },
                   et.name
