@@ -238,7 +238,10 @@ var Main = {
             .concat(
               Days.map(function (day) {
                 return {
-                  label: day.toLocaleDateString("en-US", { weekday: "long" }),
+                  label: day.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    timeZone: "Europe/Stockholm",
+                  }),
                   idx: day.getDay(),
                 };
               })
@@ -303,6 +306,7 @@ var Main = {
                           return m("li", [
                             s.start.toLocaleDateString("en-US", {
                               weekday: "short",
+                              timeZone: "Europe/Stockholm",
                             }) +
                               " " +
                               formatTime(s.start) +
