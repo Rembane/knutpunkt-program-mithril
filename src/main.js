@@ -266,7 +266,11 @@ var Main = {
         return ("0" + n).slice(-2);
       }
       function formatTime(d) {
-        return zeroPadInt(d.getHours()) + ":" + zeroPadInt(d.getMinutes());
+        return d.toLocaleTimeString("en-US", {
+          timeStyle: "short",
+          timeZone: "Europe/Stockholm",
+          hourCycle: "h23",
+        });
       }
       var programItems = (Program[eventType.pk] || [])
         .filter(function (pi) {
